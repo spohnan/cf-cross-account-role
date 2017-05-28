@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  RoleName:
+    Type: String
+  SourceAccountId:
+    Type: String
+    MaxLength: 12
+    MinLength: 12
+    Description: 12 digit id of the account containing the users to which you're granting access
+  MultiFactorAuthRequired:
+    Default: "False"
+    Type: String
+    AllowedValues:
+      - "True"
+      - "False"
+Resources:
+  AssumeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref RoleName
+      Policies:
+          -
+            PolicyName: "PowerUserWithReadOnlyToAudit"
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                -
+                  Effect: "Allow"
+                  NotAction:
+                    - "iam:*"
+                    - "cloudtrail:*"
+                    - "config:*"
+                    - "organizations:*"
+                  Resource: "*"
+                -
+                  Effect: "Allow"
+                  Action:
+                    - "cloudtrail:GetTrailStatus"
+                    - "cloudtrail:DescribeTrails"
+                    - "cloudtrail:LookupEvents"
+                    - "cloudtrail:ListTags"
+                    - "cloudtrail:ListPublicKeys"
+                    - "cloudtrail:GetEventSelectors"
+                    - "config:Get*"
+                    - "config:Describe*"
+                    - "config:Deliver*"
+                    - "config:List*"
+                    - "organizations:DescribeOrganization"
+                  Resource: "*"
+                -
+                  Effect: "Deny"
+                  Action: "s3:*"
+                  Resource:
+                    - !Join [ "", [ "arn:aws:s3:::config-bucket-", !Ref "AWS::AccountId" ] ]
+                    - !Join [ "", [ "arn:aws:s3:::config-bucket-", !Ref "AWS::AccountId", "/*" ] ]
+                    - !Join [ "", [ "arn:aws:s3:::cloudtrail-bucket-", !Ref "AWS::AccountId" ] ]
+                    - !Join [ "", [ "arn:aws:s3:::cloudtrail-bucket-", !Ref "AWS::AccountId", "/*" ] ]
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal: 
+            "AWS": !Join [ "", [ "arn:aws:iam::", !Ref SourceAccountId, ":root" ] ]
+          Action:
+          - sts:AssumeRole
+          Condition:
+            Bool:
+              "aws:MultiFactorAuthPresent": !Ref MultiFactorAuthRequired
+

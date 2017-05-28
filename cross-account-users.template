@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  GroupName:
+    Type: String
+    Description: Name of the IAM Group whose members will be permitted to switch roles
+  RoleName:
+    Type: String
+    Description: Name of the role in the target account
+  TargetAccountId:
+    Type: String
+    MaxLength: 12
+    MinLength: 12
+    Description: 12 digit id of the account containing the resources to which you're granting access
+Resources:
+  AssumeRole:
+    Type: AWS::IAM::Group
+    Properties:
+      Policies:
+      - PolicyName: CrossAccountAccessPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - sts:AssumeRole
+            Resource: !Join [ "", [ "arn:aws:iam::", !Ref TargetAccountId, ":role/", !Ref RoleName ] ]
