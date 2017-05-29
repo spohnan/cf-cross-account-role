@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Create a role that authorizes access to users in another account'
+Description: 'Create a role that authorizes access to dev users in another account'
 Metadata:
   Version: 0.7
 Parameters:

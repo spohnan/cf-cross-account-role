@@ -6,7 +6,8 @@ access.
 
 Overview of steps: http://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html
 
-* **cross-account-resources.template** - Create a role that authorizes access to users in another account
+* **cross-account-power-users.template** - Create a role that authorizes access to dev users in another account
+* **cross-account-admin-users.template** - Create a role that authorizes access to admin users in another account
 * **cross-account-users.template** - Create a group whose members can switch roles and access cross account resources
 
 ### Notes:
