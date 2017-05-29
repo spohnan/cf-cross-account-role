@@ -1,16 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Create a group whose members can switch roles and access cross account resources'
+Metadata:
+  Version: 0.7
 Parameters:
-  GroupName:
-    Type: String
-    Description: Name of the IAM Group whose members will be permitted to switch roles
-  RoleName:
-    Type: String
-    Description: Name of the role in the target account
-  TargetAccountId:
-    Type: String
-    MaxLength: 12
-    MinLength: 12
-    Description: 12 digit id of the account containing the resources to which you're granting access
+  TargetAccountRoleARNs:
+    Type: CommaDelimitedList
+    Default: "arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME"
+    Description: Comma delimited list of IAM Role ARNs in other accounts
 Resources:
   AssumeRole:
     Type: AWS::IAM::Group
@@ -23,4 +19,4 @@ Resources:
           - Effect: Allow
             Action:
             - sts:AssumeRole
-            Resource: !Join [ "", [ "arn:aws:iam::", !Ref TargetAccountId, ":role/", !Ref RoleName ] ]
+            Resource: !Ref TargetAccountRoleARNs
