@@ -19,6 +19,9 @@ Overview of steps: http://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cros
 
 * Create new account using Organizations
 * Reset root account password, configure MFA and secure credentials using your break glass procedure
+	* https://ACCOUNT_ID.signin.aws.amazon.com/console
+	* Sign-in using root account credentials link
+	* Forgot your password? link
 * Turn on audit services
     * Config and CloudTrail services
     * Use default bucket name of config-bucket-ACCOUNT_ID and cloudtrail-bucket-ACCOUNT_ID so buckets are 
